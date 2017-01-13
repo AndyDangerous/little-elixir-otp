@@ -1,10 +1,8 @@
 defmodule Pooly.Server do
   use GenServer
   import Supervisor.Spec
-  # defstruct sup: nil, worker_sup: nil, size: nil, workers: nil, mfa: nil
 
   defmodule State do
-    # defstruct sup: nil, size: nil, mfa: nil
     defstruct sup: nil, worker_sup: nil, size: nil, workers: nil, mfa: nil, monitors: nil
   end
 
@@ -110,7 +108,7 @@ defmodule Pooly.Server do
 
   defp supervisor_spec(mfa) do
     opts = [restart: :temporary]
-    supervisor(Pooly.WorkerSupervisor, [mfa], opts)
+    supervisor(Pooly.WorkerSupervisor, [self, mfa], opts)
   end
 
   defp prepopulate(size, sup) do

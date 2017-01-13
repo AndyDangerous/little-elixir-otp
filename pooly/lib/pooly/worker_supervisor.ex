@@ -3,13 +3,14 @@ defmodule Pooly.WorkerSupervisor do
 
   ## Client API
 
-  def start_link({_, _, _} = mfa) do
-    Supervisor.start_link(__MODULE__, mfa)
+  def start_link(server_pid, {_, _, _} = mfa) do
+    Supervisor.start_link(__MODULE__, [server_pid, mfa])
   end
 
   ## Server Callbacks
 
-  def init({module, function, args}) do
+  def init([server_pid, {module, function, args}]) do
+    Process.link(server_pid)
     worker_opts = [restart: :permanent,
                   function: function]
 
